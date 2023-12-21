@@ -96,10 +96,17 @@ export default function Chatting() {
   }, [userList]);
 
   return (
-    <>
+    <div className="chatting">
+      <h2>SeSAC Chat</h2>
       {userId ? (
         <>
-          <div>{userId}님 환영합니다.</div>
+          {/* room */}
+          <div></div>
+          {/* <div>{userId}님 환영합니다.</div> */}
+          <div className="chat-nav">
+            <button>back</button>
+            <p>Chat A</p>
+          </div>
           <div className="chat-container">
             {chatList.map((chat, i) => {
               if (chat.type === "notice") return <Notice key={i} chat={chat} />;
@@ -122,9 +129,10 @@ export default function Chatting() {
         </>
       ) : (
         <>
-          <div className="input-container">
+          <div className="input-container input-entry">
             <input
               type="text"
+              placeholder="닉네임을 입력해주세요"
               value={userIdInput}
               onChange={(e) => setUserIdInput(e.target.value)}
             />
@@ -132,6 +140,6 @@ export default function Chatting() {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }

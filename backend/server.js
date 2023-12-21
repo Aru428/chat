@@ -21,6 +21,14 @@ const updateUserList = () => {
 io.on("connection", (socket) => {
   console.log("socket id", socket.id);
 
+  // room 입장
+  socket.on("join", (res) => {
+    socket.join(room);
+    io.to(res.room).emit("onConnect", {
+      msg: `${res.userId} 님이 입장했습니다!!.`,
+    });
+  });
+
   socket.on("entry", (res) => {
     if (Object.values(userIdArr).includes(res.userId)) {
       // 닉네임이 중복될 경우에
