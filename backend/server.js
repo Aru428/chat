@@ -37,7 +37,13 @@ io.on("connection", (socket) => {
       });
     } else {
       // 닉네임이 중복되지 않을 경우에
-      io.emit("notice", { msg: `${res.userId}님이 입장하셨습니다.` });
+      // 해당하는 단체방에 입장
+      socket.join(res.roomId);
+      console.log(res.roomId);
+      // 특정 방에 속한 모든 클라이언트에게 전달
+      io.to(res.roomId).emit("notice", {
+        msg: `${res.userId}님이 입장하셨습니다.`,
+      });
       socket.emit("entrySuccess", { userId: res.userId });
       userIdArr[socket.id] = res.userId;
     }
@@ -47,7 +53,9 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     if (userIdArr[socket.id]) {
-      io.emit("notice", { msg: `${userIdArr[socket.id]}님이 퇴장하셨습니다.` });
+      io.to(res.roomId).emit("notice", {
+        msg: `${userIdArr[socket.id]}님이 퇴장하셨습니다.`,
+      });
       delete userIdArr[socket.id];
     }
     console.log(userIdArr);
@@ -55,7 +63,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMsg", (res) => {
-    if (res.dm === "all") io.emit("chat", { userId: res.userId, msg: res.msg });
+    if (res.dm === "all")
+      io.to(res.roomId).emit("chat", { userId: res.userId, msg: res.msg });
     else {
       io.to(res.dm).emit("chat", {
         userId: res.userId,

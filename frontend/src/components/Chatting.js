@@ -13,6 +13,7 @@ export default function Chatting() {
   const [chatList, setChatList] = useState([]);
   const [userList, setUserList] = useState({});
   const [dmTo, setDmTo] = useState("all");
+  const [roomId, setRoomId] = useState("frontend");
 
   const initSocketConnect = () => {
     console.log("connected", socket.connected);
@@ -66,7 +67,12 @@ export default function Chatting() {
 
   const sendMsg = () => {
     if (msgInput !== "") {
-      socket.emit("sendMsg", { userId: userId, msg: msgInput, dm: dmTo });
+      socket.emit("sendMsg", {
+        userId: userId,
+        msg: msgInput,
+        dm: dmTo,
+        roomId: roomId,
+      });
       setMsgInput("");
     }
   };
@@ -75,9 +81,13 @@ export default function Chatting() {
     if (e.key === "Enter") sendMsg();
   };
 
+  const EntryhandleEnter = (e) => {
+    if (e.key === "Enter") entryChat();
+  };
+
   const entryChat = () => {
     initSocketConnect();
-    socket.emit("entry", { userId: userIdInput });
+    socket.emit("entry", { userId: userIdInput, roomId: roomId });
   };
 
   // useMemo : 값을 메모라이징 한다.
@@ -100,12 +110,10 @@ export default function Chatting() {
       <h2>SeSAC Chat</h2>
       {userId ? (
         <>
-          {/* room */}
-          <div></div>
           {/* <div>{userId}님 환영합니다.</div> */}
           <div className="chat-nav">
             <button>나가기</button>
-            <p>채팅방 이름</p>
+            <p>{roomId}</p>
           </div>
           <div className="chat-container">
             {chatList.map((chat, i) => {
@@ -135,13 +143,14 @@ export default function Chatting() {
               placeholder="닉네임을 입력해주세요"
               value={userIdInput}
               onChange={(e) => setUserIdInput(e.target.value)}
+              onKeyDown={EntryhandleEnter}
             />
             <br />
             <div>채팅방 선택</div>
-            <select>
-              <option value="frontend">FRONTEND</option>
-              <option value="backend">BACKEND</option>
-              <option value="fullstack">FULLSTACK</option>
+            <select value={roomId} onChange={(e) => setRoomId(e.target.value)}>
+              <option value="FRONTEND">FRONTEND</option>
+              <option value="BACKEND">BACKEND</option>
+              <option value="FULLSTACK">FULLSTACK</option>
             </select>
             <br />
             <button onClick={entryChat}>입장</button>
