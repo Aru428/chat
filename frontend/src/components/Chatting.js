@@ -13,7 +13,7 @@ export default function Chatting() {
   const [chatList, setChatList] = useState([]);
   const [userList, setUserList] = useState({});
   const [dmTo, setDmTo] = useState("all");
-  const [roomId, setRoomId] = useState("frontend");
+  const [roomId, setRoomId] = useState("FRONTEND");
 
   const initSocketConnect = () => {
     console.log("connected", socket.connected);

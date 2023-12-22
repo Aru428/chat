@@ -13,6 +13,7 @@ const io = require("socket.io")(server, {
 });
 
 const userIdArr = {};
+const userRoomIdArr = {};
 
 const updateUserList = () => {
   io.emit("userList", userIdArr);
@@ -20,14 +21,6 @@ const updateUserList = () => {
 
 io.on("connection", (socket) => {
   console.log("socket id", socket.id);
-
-  // room 입장
-  socket.on("join", (res) => {
-    socket.join(room);
-    io.to(res.room).emit("onConnect", {
-      msg: `${res.userId} 님이 입장했습니다!!.`,
-    });
-  });
 
   socket.on("entry", (res) => {
     if (Object.values(userIdArr).includes(res.userId)) {
@@ -39,7 +32,7 @@ io.on("connection", (socket) => {
       // 닉네임이 중복되지 않을 경우에
       // 해당하는 단체방에 입장
       socket.join(res.roomId);
-      console.log(res.roomId);
+      userRoomIdArr[socket.id] = res.roomId;
       // 특정 방에 속한 모든 클라이언트에게 전달
       io.to(res.roomId).emit("notice", {
         msg: `${res.userId}님이 입장하셨습니다.`,
@@ -48,14 +41,17 @@ io.on("connection", (socket) => {
       userIdArr[socket.id] = res.userId;
     }
     console.log(userIdArr);
+    console.log(userRoomIdArr);
     updateUserList();
   });
 
   socket.on("disconnect", () => {
     if (userIdArr[socket.id]) {
-      io.to(res.roomId).emit("notice", {
+      io.to(userRoomIdArr[socket.id]).emit("notice", {
         msg: `${userIdArr[socket.id]}님이 퇴장하셨습니다.`,
       });
+      socket.leave(userRoomIdArr[socket.id]);
+      delete userRoomIdArr[socket.id];
       delete userIdArr[socket.id];
     }
     console.log(userIdArr);
