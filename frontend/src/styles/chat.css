@@ -17,7 +17,7 @@
 
 .chat-nav > button {
   margin-left: 10px;
-  margin-right: 90px;
+  margin-right: 10px;
 }
 
 .chat-container {
@@ -58,6 +58,25 @@
   margin-top: 10px;
 }
 
+.entry-container {
+  width: 400px;
+  height: 300px;
+  border: 1px solid lightgray;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 5px 5px 5px 5px gray;
+}
+
+.entry-container > input,
+.entry-container > select {
+  width: 320px;
+  height: 40px;
+  padding-left: 5px;
+}
+
 .input-container {
   width: 320px;
   display: flex;
@@ -68,17 +87,18 @@
   flex-grow: 1;
 }
 
-.input-entry {
+.entry-container > button {
+  width: 320px;
   height: 40px;
-}
-
-.input-entry > input {
-  margin-right: 5px;
-}
-
-.input-entry > button {
   background-color: black;
   color: white;
   font-weight: bold;
-  border-radius: 10%;
+  border-radius: 10px;
+}
+
+.entry-container > div {
+  width: 320px;
+  height: 30px;
+  font-size: 14px;
+  font-weight: bold;
 }

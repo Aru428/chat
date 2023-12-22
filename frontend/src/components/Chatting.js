@@ -104,8 +104,8 @@ export default function Chatting() {
           <div></div>
           {/* <div>{userId}님 환영합니다.</div> */}
           <div className="chat-nav">
-            <button>back</button>
-            <p>Chat A</p>
+            <button>나가기</button>
+            <p>채팅방 이름</p>
           </div>
           <div className="chat-container">
             {chatList.map((chat, i) => {
@@ -129,13 +129,21 @@ export default function Chatting() {
         </>
       ) : (
         <>
-          <div className="input-container input-entry">
+          <div className="entry-container ">
             <input
               type="text"
               placeholder="닉네임을 입력해주세요"
               value={userIdInput}
               onChange={(e) => setUserIdInput(e.target.value)}
             />
+            <br />
+            <div>채팅방 선택</div>
+            <select>
+              <option value="frontend">FRONTEND</option>
+              <option value="backend">BACKEND</option>
+              <option value="fullstack">FULLSTACK</option>
+            </select>
+            <br />
             <button onClick={entryChat}>입장</button>
           </div>
         </>
