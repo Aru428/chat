@@ -109,8 +109,9 @@ export default function Chatting() {
     socket.emit("entry", { userId: userIdInput, roomId: roomId });
   };
 
-  const userChat = () => {
+  const userChat = (chooseList, key) => {
     // 단체 채팅방에서 유저 클릭시 1:1 채팅
+    console.log(chooseList[key]);
   };
 
   // useMemo : 값을 메모라이징 한다.
@@ -143,7 +144,7 @@ export default function Chatting() {
     for (const key in chooseList) {
       if (chooseList[key] === userId) continue;
       divs.push(
-        <div key={key} value={chooseList[key]} onClick={userChat}>
+        <div key={key} onClick={() => userChat(chooseList, key)}>
           <hr />
           <p className="user">👤 {chooseList[key]}</p>
         </div>
