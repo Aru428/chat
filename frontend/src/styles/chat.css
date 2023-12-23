@@ -13,7 +13,7 @@
 }
 
 .chat-nav {
-  width: 450px;
+  width: 500px;
   height: 40px;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
@@ -56,7 +56,7 @@
 }
 
 .chat-container {
-  width: 350px;
+  width: 400px;
   height: 500px;
   padding: 10px 15px 0;
 }
@@ -112,7 +112,7 @@
 }
 
 .input-container {
-  width: 350px;
+  width: 400px;
   height: 50px;
   border-bottom-right-radius: 30px;
   display: flex;
@@ -127,6 +127,10 @@
   height: 30px;
   border: none;
   border-radius: 10px;
+}
+
+.input-container > select {
+  margin-right: 10px;
 }
 
 .input-container > button {

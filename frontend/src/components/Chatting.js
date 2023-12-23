@@ -158,10 +158,6 @@ export default function Chatting() {
                 <hr />
                 <p className="user">👤 나</p>
                 {userListDivs}
-                {/* <select value={dmTo} onChange={(e) => setDmTo(e.target.value)}>
-                  <option value="all">전체</option>
-                  {userListOptions}
-                </select> */}
               </div>
               <div className="chat">
                 <div className="chat-container">
@@ -172,6 +168,13 @@ export default function Chatting() {
                   })}
                 </div>
                 <div className="input-container">
+                  <select
+                    value={dmTo}
+                    onChange={(e) => setDmTo(e.target.value)}
+                  >
+                    <option value="all">전체</option>
+                    {userListOptions}
+                  </select>
                   <input
                     type="text"
                     value={msgInput}
