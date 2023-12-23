@@ -100,9 +100,17 @@ export default function Chatting() {
     if (e.key === "Enter") entryChat();
   };
 
+  const handleRefreshClick = () => {
+    window.location.reload(true);
+  };
+
   const entryChat = () => {
     initSocketConnect();
     socket.emit("entry", { userId: userIdInput, roomId: roomId });
+  };
+
+  const userChat = () => {
+    // 단체 채팅방에서 유저 클릭시 1:1 채팅
   };
 
   // useMemo : 값을 메모라이징 한다.
@@ -111,6 +119,8 @@ export default function Chatting() {
     let chooseList;
     if (roomId === "FRONTEND") chooseList = frontList;
     else if (roomId === "BACKEND") chooseList = backList;
+    else chooseList = fullList;
+
     const options = [];
     for (const key in chooseList) {
       if (chooseList[key] === userId) continue;
@@ -133,7 +143,7 @@ export default function Chatting() {
     for (const key in chooseList) {
       if (chooseList[key] === userId) continue;
       divs.push(
-        <div>
+        <div key={key} value={chooseList[key]} onClick={userChat}>
           <hr />
           <p className="user">👤 {chooseList[key]}</p>
         </div>
@@ -149,7 +159,7 @@ export default function Chatting() {
         <>
           <div className="main">
             <div className="chat-nav">
-              <button>✖️</button>
+              <button onClick={handleRefreshClick}>✖️</button>
               <p>{roomId}</p>
             </div>
             <div className="main-container">

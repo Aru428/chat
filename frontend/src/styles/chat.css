@@ -130,7 +130,10 @@
 }
 
 .input-container > select {
+  border: none;
+  height: 30px;
   margin-right: 10px;
+  border-radius: 10px;
 }
 
 .input-container > button {
