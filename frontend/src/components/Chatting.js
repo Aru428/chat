@@ -12,6 +12,8 @@ export default function Chatting() {
   const [userId, setUserId] = useState(null);
   const [chatList, setChatList] = useState([]);
   const [userList, setUserList] = useState({});
+  const [frontList, setFrontList] = useState([]);
+  const [backList, setBackList] = useState([]);
   const [dmTo, setDmTo] = useState("all");
   const [roomId, setRoomId] = useState("FRONTEND");
 
@@ -31,6 +33,14 @@ export default function Chatting() {
 
     socket.on("userList", (res) => {
       setUserList(res);
+    });
+
+    socket.on("updateFrontList", (res) => {
+      setFrontList(res);
+    });
+
+    socket.on("updateBackList", (res) => {
+      setBackList(res);
     });
   }, []);
 
@@ -93,46 +103,52 @@ export default function Chatting() {
   // useMemo : 값을 메모라이징 한다.
   // 뒤에 있는 의존성 배열에 있는 값이 update 될 때마다 연산을 실행함
   const userListOptions = useMemo(() => {
+    let chooseList;
+    if (roomId === "FRONTEND") chooseList = frontList;
+    else if (roomId === "BACKEND") chooseList = backList;
     const options = [];
-    for (const key in userList) {
-      if (userList[key] === userId) continue;
+    for (const key in chooseList) {
+      if (chooseList[key] === userId) continue;
       options.push(
         <option key={key} value={key}>
-          {userList[key]}
+          {chooseList[key]}
         </option>
       );
     }
     return options;
-  }, [userList]);
+  }, [userList, frontList, backList]);
 
   return (
     <div className="chatting">
       <h2>SeSAC Chat</h2>
       {userId ? (
         <>
-          {/* <div>{userId}님 환영합니다.</div> */}
           <div className="chat-nav">
             <button>나가기</button>
             <p>{roomId}</p>
           </div>
-          <div className="chat-container">
-            {chatList.map((chat, i) => {
-              if (chat.type === "notice") return <Notice key={i} chat={chat} />;
-              else return <Chat key={i} chat={chat} />;
-            })}
-          </div>
-          <div className="input-container">
-            <select value={dmTo} onChange={(e) => setDmTo(e.target.value)}>
-              <option value="all">전체</option>
-              {userListOptions}
-            </select>
-            <input
-              type="text"
-              value={msgInput}
-              onChange={(e) => setMsgInput(e.target.value)}
-              onKeyDown={handleEnter}
-            />
-            <button onClick={sendMsg}>전송</button>
+          <div className="main-container">
+            <div className="chat-userlist"></div>
+            <div className="chat-container">
+              {chatList.map((chat, i) => {
+                if (chat.type === "notice")
+                  return <Notice key={i} chat={chat} />;
+                else return <Chat key={i} chat={chat} />;
+              })}
+            </div>
+            <div className="input-container">
+              <select value={dmTo} onChange={(e) => setDmTo(e.target.value)}>
+                <option value="all">전체</option>
+                {userListOptions}
+              </select>
+              <input
+                type="text"
+                value={msgInput}
+                onChange={(e) => setMsgInput(e.target.value)}
+                onKeyDown={handleEnter}
+              />
+              <button onClick={sendMsg}>전송</button>
+            </div>
           </div>
         </>
       ) : (

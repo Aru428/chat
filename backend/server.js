@@ -15,6 +15,23 @@ const io = require("socket.io")(server, {
 const userIdArr = {};
 const userRoomIdArr = {};
 
+const updateAllRoom = (roomId) => {
+  // userRoomIdArr에서 roomId와 일치하는 socket.id 찾기
+  const socketIdInRoom = Object.keys(userRoomIdArr).filter(
+    (socketId) => userRoomIdArr[socketId] === roomId
+  );
+
+  // userIdArr에서 socketIdInRoom 배열과 일치하는 socket.id : userId 저장
+  const usersInRoom = socketIdInRoom.reduce((acc, socketId) => {
+    acc[socketId] = userIdArr[socketId];
+    return acc;
+  }, {});
+
+  if (roomId === "FRONTEND") io.emit("updateFrontList", usersInRoom);
+  else if (roomId === "BACKEND") io.emit("updateBackList", usersInRoom);
+  else io.emit("updateFullList", usersInRoom);
+};
+
 const updateUserList = () => {
   io.emit("userList", userIdArr);
 };
@@ -43,19 +60,23 @@ io.on("connection", (socket) => {
     console.log(userIdArr);
     console.log(userRoomIdArr);
     updateUserList();
+    updateAllRoom(res.roomId);
   });
 
   socket.on("disconnect", () => {
+    let deleteAllRoom;
     if (userIdArr[socket.id]) {
       io.to(userRoomIdArr[socket.id]).emit("notice", {
         msg: `${userIdArr[socket.id]}님이 퇴장하셨습니다.`,
       });
       socket.leave(userRoomIdArr[socket.id]);
+      deleteAllRoom = userRoomIdArr[socket.id];
       delete userRoomIdArr[socket.id];
       delete userIdArr[socket.id];
     }
     console.log(userIdArr);
     updateUserList();
+    updateAllRoom(deleteAllRoom);
   });
 
   socket.on("sendMsg", (res) => {
