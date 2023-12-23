@@ -1,10 +1,7 @@
-import "../styles/chat.css";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Chat from "./Chat";
 import Notice from "./Notice";
-import io from "socket.io-client";
-
-const socket = io.connect("http://localhost:8000", { autoConnect: false });
+import { socket } from "./Chatting";
 
 export default function Chatting() {
   const [msgInput, setMsgInput] = useState("");
@@ -159,9 +156,9 @@ export default function Chatting() {
                 <p className="user">👤 나</p>
                 {userListDivs}
                 {/* <select value={dmTo} onChange={(e) => setDmTo(e.target.value)}>
-                  <option value="all">전체</option>
-                  {userListOptions}
-                </select> */}
+                      <option value="all">전체</option>
+                      {userListOptions}
+                    </select> */}
               </div>
               <div className="chat">
                 <div className="chat-container">
